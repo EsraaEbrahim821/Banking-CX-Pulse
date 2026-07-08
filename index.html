@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banking CX Pulse — The Customer Centric Production</title>
+<style>
+  :root{
+    /* ===== Skills Bank brand colors (from logo + brand palette) ===== */
+    --brand-navy:#080828;      /* logo navy - primary text & headings */
+    --brand-teal:#40BDA9;      /* brand teal - primary accent / success */
+    --brand-blue:#4D88E8;      /* brand blue - secondary accent */
+    --brand-yellow:#FFBC3A;    /* brand yellow - tertiary accent */
+    --brand-warning:#F26A44;   /* brand red-orange - warning / incorrect */
+    --brand-light:#EBF4FF;     /* brand light blue - page background */
+    --brand-white:#FFFFFF;
+    --brand-grey:#5E5E73;      /* muted tint of brand navy - secondary text */
+
+    /* Soft tints derived from the brand colors, used for card backgrounds */
+    --brand-teal-bg:#E8F7F5;
+    --brand-blue-bg:#EBF4FF;
+    --brand-yellow-bg:#FFF6E3;
+    --brand-teal-hover:#DDF3F0;
+    --brand-blue-hover:#DBE7FA;
+    --brand-yellow-hover:#FFEECE;
+    --brand-track-bg:#E4EDFC;
+
+    /* Darker tints of the brand colors, used for readable status text */
+    --brand-teal-text:#2F8782;
+    --brand-warning-text:#944339;
+    --brand-navy-hover:#12325A;
+
+    /* Neutral tints of brand navy, used for disabled states */
+    --brand-disabled-bg:#BFBFC7;
+    --brand-disabled-text:#8E8E9D;
+
+    /* Shadow derived from brand navy */
+    --brand-shadow:rgba(8,8,40,0.10);
+
+    /* ===== Legacy variable names kept as aliases so every rule below
+       automatically uses Skills Bank brand colors ===== */
+    --navy:var(--brand-navy);
+    --teal:var(--brand-teal);
+    --teal-bg:var(--brand-teal-bg);
+    --yellow-bg:var(--brand-yellow-bg);
+    --blue-bg:var(--brand-blue-bg);
+    --white:var(--brand-white);
+    --page-bg:var(--brand-light);
+    --grey:var(--brand-grey);
+    --success:var(--brand-teal);
+    --warning:var(--brand-warning);
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{
+    margin:0;
+    padding:0;
+    min-height:100%;
+    background:var(--page-bg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--navy);
+  }
+
+  body{
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    padding:24px 14px 60px;
+  }
+
+  .app{
+    width:100%;
+    max-width:520px;
+  }
+
+  header.masthead{
+    text-align:center;
+    margin-bottom:16px;
+  }
+
+  header.masthead .logo-wrap{
+    display:inline-block;
+    line-height:0;
+    margin:0 auto 10px;
+  }
+
+  header.masthead .logo{
+    display:block;
+    width:auto;
+    height:26px;
+  }
+
+  @media (min-width:480px){
+    header.masthead .logo{
+      height:34px;
+    }
+  }
+
+  header.masthead .program{
+    font-size:12px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--grey);
+    margin:0 0 4px;
+    font-weight:600;
+  }
+
+  header.masthead .activity{
+    font-size:15px;
+    color:var(--navy);
+    font-weight:700;
+    margin:0 0 2px;
+  }
+
+  header.masthead .question{
+    font-size:13px;
+    color:var(--teal);
+    font-weight:600;
+    margin:0;
+  }
+
+  .progress-wrap{
+    margin:18px 0 10px;
+  }
+
+  .progress-label{
+    font-size:12px;
+    color:var(--grey);
+    font-weight:600;
+    margin-bottom:6px;
+    text-align:right;
+  }
+
+  .progress-track{
+    background:var(--brand-track-bg);
+    border-radius:999px;
+    height:8px;
+    overflow:hidden;
+  }
+
+  .progress-fill{
+    background:var(--teal);
+    height:100%;
+    border-radius:999px;
+    width:0%;
+    transition:width 0.4s ease;
+  }
+
+  .card{
+    background:var(--white);
+    border-radius:20px;
+    box-shadow:0 6px 24px var(--brand-shadow);
+    padding:26px 22px;
+  }
+
+  .screen{ display:none; }
+  .screen.active{ display:block; }
+
+  h1.title{
+    font-size:22px;
+    margin:0 0 6px;
+    color:var(--navy);
+    font-weight:800;
+  }
+
+  h2.screen-title{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--teal);
+    font-weight:700;
+    margin:0 0 10px;
+  }
+
+  p.body-text{
+    font-size:15px;
+    line-height:1.55;
+    color:var(--grey);
+    margin:0 0 14px;
+  }
+
+  p.instruction{
+    font-size:15px;
+    line-height:1.5;
+    color:var(--navy);
+    font-weight:600;
+    margin:0 0 6px;
+  }
+
+  p.helper{
+    font-size:13px;
+    color:var(--grey);
+    margin:0 0 16px;
+    line-height:1.5;
+  }
+
+  /* Pulse visual */
+  .pulse-visual{
+    position:relative;
+    width:120px;
+    height:120px;
+    margin:6px auto 20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .pulse-ring{
+    position:absolute;
+    border:2px solid var(--teal);
+    border-radius:50%;
+    opacity:0;
+    animation:pulseRing 2.4s ease-out infinite;
+  }
+  .pulse-ring.r1{ width:40px; height:40px; animation-delay:0s; }
+  .pulse-ring.r2{ width:40px; height:40px; animation-delay:0.8s; }
+  .pulse-ring.r3{ width:40px; height:40px; animation-delay:1.6s; }
+
+  .pulse-dot{
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    background:var(--teal);
+    z-index:2;
+  }
+
+  @keyframes pulseRing{
+    0%{ transform:scale(1); opacity:0.55; }
+    100%{ transform:scale(3.4); opacity:0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .pulse-ring{ animation:none; opacity:0.35; transform:scale(2); }
+  }
+
+  /* Buttons */
+  .btn{
+    display:inline-block;
+    width:100%;
+    text-align:center;
+    padding:14px 18px;
+    border-radius:12px;
+    border:none;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:inherit;
+    min-height:48px;
+    transition:transform 0.12s ease, background 0.2s ease, opacity 0.2s ease;
+  }
+
+  .btn-primary{
+    background:var(--navy);
+    color:var(--white);
+  }
+  .btn-primary:hover{ background:var(--brand-navy-hover); }
+  .btn-primary:active{ transform:scale(0.98); }
+  .btn-primary:disabled{
+    background:var(--brand-disabled-bg);
+    color:var(--brand-disabled-text);
+    cursor:not-allowed;
+  }
+
+  .btn-secondary{
+    background:var(--teal-bg);
+    color:var(--navy);
+    margin-top:10px;
+  }
+  .btn-secondary:hover{ background:var(--brand-teal-hover); }
+  .btn-secondary:active{ transform:scale(0.98); }
+
+  .btn-text{
+    background:none;
+    color:var(--grey);
+    text-decoration:underline;
+    font-weight:600;
+    padding:10px;
+    width:auto;
+    min-height:auto;
+  }
+
+  .btn:focus-visible{
+    outline:3px solid var(--teal);
+    outline-offset:2px;
+  }
+
+  .btn-row{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-top:18px;
+  }
+
+  /* Word / priority cards grid */
+  .count-badge{
+    display:inline-block;
+    background:var(--blue-bg);
+    color:var(--navy);
+    font-size:13px;
+    font-weight:700;
+    padding:6px 12px;
+    border-radius:999px;
+    margin-bottom:14px;
+  }
+
+  .word-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:6px;
+  }
+
+  .word-card{
+    background:var(--blue-bg);
+    border:2px solid transparent;
+    border-radius:14px;
+    padding:14px 10px;
+    text-align:center;
+    font-size:14px;
+    font-weight:600;
+    color:var(--navy);
+    cursor:pointer;
+    min-height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  }
+
+  .word-card:hover{ background:var(--brand-blue-hover); }
+  .word-card:active{ transform:scale(0.97); }
+
+  .word-card.selected{
+    background:var(--teal);
+    color:var(--white);
+    border-color:var(--navy);
+  }
+
+  .word-card:focus-visible{
+    outline:3px solid var(--navy);
+    outline-offset:2px;
+  }
+
+  .priority-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:6px;
+  }
+
+  .priority-card{
+    background:var(--yellow-bg);
+    border:2px solid transparent;
+    border-radius:14px;
+    padding:14px 16px;
+    font-size:15px;
+    font-weight:600;
+    color:var(--navy);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    min-height:48px;
+    transition:background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  }
+
+  .priority-card:hover{ background:var(--brand-yellow-hover); }
+  .priority-card:active{ transform:scale(0.98); }
+
+  .priority-card.selected{
+    background:var(--teal);
+    color:var(--white);
+    border-color:var(--navy);
+  }
+
+  .priority-card:focus-visible{
+    outline:3px solid var(--navy);
+    outline-offset:2px;
+  }
+
+  .priority-badge{
+    background:var(--navy);
+    color:var(--white);
+    font-size:12px;
+    font-weight:700;
+    padding:4px 10px;
+    border-radius:999px;
+    white-space:nowrap;
+    margin-left:10px;
+  }
+
+  /* Options for challenge screens */
+  .option-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin:14px 0 6px;
+  }
+
+  .option-card{
+    background:var(--blue-bg);
+    border:2px solid transparent;
+    border-radius:14px;
+    padding:14px 16px;
+    font-size:14.5px;
+    line-height:1.4;
+    font-weight:600;
+    color:var(--navy);
+    cursor:pointer;
+    text-align:left;
+    min-height:48px;
+    transition:background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  }
+
+  .option-card:hover{ background:var(--brand-blue-hover); }
+  .option-card:active{ transform:scale(0.98); }
+
+  .option-card:focus-visible{
+    outline:3px solid var(--navy);
+    outline-offset:2px;
+  }
+
+  .option-card.correct{
+    background:var(--teal);
+    color:var(--white);
+    border-color:var(--navy);
+  }
+
+  .option-card.incorrect{
+    background:var(--warning);
+    color:var(--white);
+    border-color:var(--navy);
+  }
+
+  .option-card:disabled{
+    cursor:default;
+  }
+  .option-card:disabled:hover{ transform:none; }
+
+  .situation-box{
+    background:var(--yellow-bg);
+    border-radius:14px;
+    padding:14px 16px;
+    font-size:14.5px;
+    line-height:1.5;
+    color:var(--navy);
+    font-style:italic;
+    margin-bottom:14px;
+  }
+
+  .insight-card{
+    background:var(--teal-bg);
+    border-radius:14px;
+    padding:16px 16px;
+    margin-top:16px;
+  }
+
+  .insight-card.warning{
+    background:var(--yellow-bg);
+  }
+
+  .insight-card h3{
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:var(--navy);
+    margin:0 0 8px;
+    font-weight:800;
+  }
+
+  .insight-card p{
+    font-size:14px;
+    color:var(--navy);
+    line-height:1.5;
+    margin:0 0 8px;
+  }
+
+  .insight-card p:last-child{ margin-bottom:0; }
+
+  .insight-card .label{
+    font-weight:700;
+    color:var(--navy);
+  }
+
+  .feedback-status{
+    display:inline-block;
+    font-size:13px;
+    font-weight:800;
+    padding:6px 12px;
+    border-radius:999px;
+    margin-bottom:10px;
+  }
+  .feedback-status.good{
+    background:var(--teal-bg);
+    color:var(--brand-teal-text);
+  }
+  .feedback-status.close{
+    background:var(--yellow-bg);
+    color:var(--brand-warning-text);
+  }
+
+  .summary-block{
+    margin-bottom:14px;
+  }
+
+  .summary-block .label{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:var(--grey);
+    font-weight:700;
+    margin:0 0 6px;
+  }
+
+  .summary-block .value{
+    font-size:15px;
+    color:var(--navy);
+    font-weight:600;
+    line-height:1.5;
+    margin:0;
+  }
+
+  .takeaway-list{
+    margin:0;
+    padding:0 0 0 20px;
+  }
+
+  .takeaway-list li{
+    font-size:14px;
+    color:var(--navy);
+    line-height:1.6;
+    margin-bottom:6px;
+  }
+
+  .trainer-prompt{
+    background:var(--blue-bg);
+    border-radius:14px;
+    padding:14px 16px;
+    margin:16px 0;
+  }
+
+  .trainer-prompt .label{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:var(--grey);
+    font-weight:700;
+    margin:0 0 6px;
+  }
+
+  .trainer-prompt p{
+    font-size:14.5px;
+    color:var(--navy);
+    font-weight:600;
+    line-height:1.5;
+    margin:0;
+  }
+
+  .hint-none{
+    color:var(--grey);
+    font-weight:500;
+    font-style:italic;
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <header class="masthead">
+    <!-- Skills Bank logo: embedded inline SVG, no external file needed -->
+    <div class="logo-wrap" role="img" aria-label="Skills Bank Logo">
+      <svg class="logo" width="99" height="33" viewBox="0 0 99 33" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true">
+        <path d="M31.7043 0.694367V8.00083C31.7043 8.10685 31.6167 8.1952 31.5073 8.1952H28.3776C28.2682 8.1952 28.185 8.10685 28.185 8.00083V4.1709C28.185 4.15765 28.1719 4.1444 28.1543 4.1444H24.2805C24.1754 4.1444 24.0879 4.05605 24.0879 3.95003V0.694367C24.0879 0.588349 24.1754 0.5 24.2805 0.5H31.5073C31.6167 0.5 31.7043 0.588349 31.7043 0.694367Z" fill="#080828"/>
+        <path d="M31.7043 12.648V32.1775C31.7043 32.3542 31.5599 32.5 31.3848 32.5H0.315161C0.140072 32.5 0 32.3542 0 32.1775V0.822473C0 0.645775 0.140072 0.5 0.315161 0.5H19.8333C20.0084 0.5 20.1484 0.645775 20.1484 0.822473V12.3299H31.3848C31.5599 12.3299 31.7043 12.4713 31.7043 12.648Z" fill="#080828"/>
+        <path d="M40.9531 15.0249C39.173 15.0249 37.7416 14.7952 36.659 14.3358V12.264C37.2718 12.4937 37.9298 12.6807 38.6331 12.825C39.3393 12.9693 40.0411 13.0415 40.7386 13.0415C41.8329 13.0415 42.6543 12.9119 43.2029 12.6527C43.7516 12.3936 44.0259 11.8767 44.0259 11.1022C44.0259 10.6281 43.9121 10.2482 43.6844 9.96252C43.4568 9.67391 43.0789 9.42506 42.5507 9.21597C42.0255 9.00982 41.3003 8.79189 40.3753 8.56219C38.8957 8.17345 37.8569 7.68017 37.2587 7.08234C36.6604 6.48746 36.3613 5.66581 36.3613 4.6174C36.3613 3.39524 36.802 2.4396 37.6833 1.75048C38.5675 1.06136 39.885 0.716797 41.6359 0.716797C42.4326 0.716797 43.1825 0.774223 43.8858 0.889077C44.592 1.00393 45.1435 1.13351 45.5404 1.27781V3.34518C44.4607 2.92994 43.2657 2.72232 41.9554 2.72232C40.9312 2.72232 40.1345 2.85779 39.5655 3.12872C38.9935 3.40261 38.7075 3.89883 38.7075 4.6174C38.7075 5.03264 38.8082 5.36984 39.0096 5.629C39.208 5.88816 39.5523 6.1105 40.0426 6.29603C40.5358 6.48451 41.2157 6.69361 42.0824 6.92331C43.2059 7.20897 44.0784 7.55059 44.7 7.94816C45.3186 8.34279 45.752 8.8022 46 9.3264C46.248 9.85061 46.3721 10.4425 46.3721 11.1022C46.3721 12.3244 45.9241 13.283 45.0283 13.978C44.1324 14.6759 42.774 15.0249 40.9531 15.0249Z" fill="#080828"/>
+        <path d="M48.6348 14.8088V0.933594H50.9635V7.31239L56.8114 0.933594H59.5034L54.4434 6.53492L59.7179 14.8088H57.2404L52.9901 8.0236L50.9635 10.2191V14.8088H48.6348Z" fill="#080828"/>
+        <path d="M61.9805 14.8088V0.933594H64.3048V14.8088H61.9805Z" fill="#080828"/>
+        <path d="M66.998 14.8088V0.933594H69.3267V12.9976H76.3697V14.8088H66.998Z" fill="#080828"/>
+        <path d="M78.2031 14.8088V0.933594H80.5318V12.9976H87.5792V14.8088H78.2031Z" fill="#080828"/>
+        <path d="M93.5761 15.0249C91.796 15.0249 90.3661 14.7952 89.2864 14.3358V12.264C89.8963 12.4937 90.5543 12.6807 91.2605 12.825C91.9638 12.9693 92.6642 13.0415 93.3616 13.0415C94.4588 13.0415 95.2818 12.9119 95.8304 12.6527C96.3761 12.3936 96.6489 11.8767 96.6489 11.1022C96.6489 10.6281 96.5351 10.2482 96.3075 9.96252C96.0799 9.67391 95.7034 9.42506 95.1782 9.21597C94.65 9.00982 93.9234 8.79189 92.9983 8.56219C91.5188 8.17345 90.4799 7.68017 89.8817 7.08234C89.2835 6.48746 88.9844 5.66581 88.9844 4.6174C88.9844 3.39524 89.4265 2.4396 90.3107 1.75048C91.192 1.06136 92.5081 0.716797 94.2589 0.716797C95.0556 0.716797 95.807 0.774223 96.5132 0.889077C97.2165 1.00393 97.768 1.13351 98.1678 1.27781V3.34518C97.0852 2.92994 95.8887 2.72232 94.5785 2.72232C93.5542 2.72232 92.7576 2.85779 92.1885 3.12872C91.6195 3.40261 91.3349 3.89883 91.3349 4.6174C91.3349 5.03264 91.4342 5.36984 91.6326 5.629C91.834 5.88816 92.1798 6.1105 92.67 6.29603C93.1603 6.48451 93.8402 6.69361 94.7098 6.92331C95.8333 7.20897 96.7044 7.55059 97.323 7.94816C97.9417 8.34279 98.3765 8.8022 98.6274 9.3264C98.8755 9.85061 98.9995 10.4425 98.9995 11.1022C98.9995 12.3244 98.5516 13.283 97.6557 13.978C96.7569 14.6759 95.397 15.0249 93.5761 15.0249Z" fill="#080828"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M36.791 32.4963V18.6211H43.4488C44.8145 18.6211 45.8256 18.945 46.4822 19.5929C47.1359 20.2379 47.4627 21.1493 47.4627 22.3273C47.4627 23.0754 47.3139 23.7041 47.0162 24.2136C46.7157 24.7231 46.3173 25.1074 45.8213 25.3665C46.4895 25.5521 47.0192 25.8863 47.4102 26.3693C47.8012 26.8493 47.9967 27.5561 47.9967 28.4897C47.9967 29.8414 47.6378 30.8471 46.9199 31.5068C46.1992 32.1665 45.1428 32.4963 43.7508 32.4963H36.791ZM39.1153 24.5493H43.1293C43.9113 24.5493 44.4702 24.3652 44.8057 23.9971C45.1413 23.632 45.3091 23.1401 45.3091 22.5217C45.3091 21.8031 45.1384 21.2686 44.797 20.9182C44.4526 20.5648 43.8121 20.3881 42.8754 20.3881H39.1153V24.5493ZM39.1153 30.7779H43.2562C44.082 30.7779 44.6876 30.6012 45.0728 30.2478C45.4579 29.8974 45.6505 29.2833 45.6505 28.4057C45.6505 27.6901 45.4609 27.1556 45.0815 26.8022C44.7051 26.4518 44.0193 26.2765 43.0242 26.2765H39.1153V30.7779Z" fill="#080828"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M49.1074 32.4963L54.3601 18.6211H56.9646L62.1735 32.4963H59.7791L58.4134 28.9226H52.885L51.5193 32.4963H49.1074ZM53.2483 27.1114H58.0326L55.6383 20.7547L53.2483 27.1114Z" fill="#080828"/>
+        <path d="M64.4551 32.4963V18.6211H66.508L73.6779 28.8342V18.6211H75.9847V32.4963H73.9362L66.7838 22.3052V32.4963H64.4551Z" fill="#080828"/>
+        <path d="M78.6992 32.4963V18.6211H81.0235V24.9999L86.8759 18.6211H89.5635L84.5034 24.2224L89.778 32.4963H87.3005L83.0546 25.7111L81.0235 27.9066V32.4963H78.6992Z" fill="#080828"/>
+      </svg>
+    </div>
+    <p class="program">The Customer Centric Production</p>
+    <p class="activity">Activity 1: Banking CX Pulse</p>
+    <p class="question">Online pulse check: What is banking for?</p>
+  </header>
+
+  <div class="progress-wrap" id="progressWrap" style="display:none;">
+    <div class="progress-label" id="progressLabel"></div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <main class="card">
+
+    <!-- SCREEN 1: Welcome -->
+    <section class="screen active" id="screen-welcome">
+      <h1 class="title">Banking CX Pulse</h1>
+      <p class="question" style="margin-bottom:14px; color:var(--teal); font-weight:600; font-size:14px;">Online pulse check: What is banking for?</p>
+
+      <div class="pulse-visual" aria-hidden="true">
+        <div class="pulse-ring r1"></div>
+        <div class="pulse-ring r2"></div>
+        <div class="pulse-ring r3"></div>
+        <div class="pulse-dot"></div>
+      </div>
+
+      <p class="body-text">Banking is not only about accounts, apps, or products.</p>
+      <p class="body-text">It is about helping people use financial services with confidence.</p>
+      <p class="body-text">Let's look at banking from the customer's point of view.</p>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="goToScreen('q1')">Start Pulse</button>
+      </div>
+    </section>
+
+    <!-- SCREEN 2: Word cloud -->
+    <section class="screen" id="screen-q1">
+      <h2 class="screen-title">Question 1 — Word cloud</h2>
+      <p class="instruction">When you hear "banking progress", choose 3 words that come to mind.</p>
+      <p class="helper">There is no wrong choice. Choose your first reaction.</p>
+
+      <div class="count-badge" id="wordCount">0 / 3 selected</div>
+
+      <div class="word-grid" id="wordGrid"></div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="wordContinueBtn" disabled onclick="showWordFeedback()">Continue</button>
+      </div>
+
+      <div id="wordFeedback" style="display:none;">
+        <div class="insight-card">
+          <h3>Insight</h3>
+          <p>Some words describe bank services.</p>
+          <p>Some words describe the customer experience.</p>
+          <p>Customer centricity starts when we connect both.</p>
+          <div class="summary-block">
+            <p class="label">Your selected words</p>
+            <p class="value" id="wordSelectedList"></p>
+          </div>
+          <div class="summary-block">
+            <p class="label">Customer view</p>
+            <p class="value" id="wordCustomerView"></p>
+          </div>
+          <div class="summary-block" style="margin-bottom:0;">
+            <p class="label">Bank / service view</p>
+            <p class="value" id="wordBankView"></p>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="goToScreen('q2')">Next</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 3: Ranking -->
+    <section class="screen" id="screen-q2">
+      <h2 class="screen-title">Question 2 — Ranking</h2>
+      <p class="instruction">A first-time banking user needs more than access. Tap 3 priorities in order.</p>
+      <p class="helper">Your first tap is Priority 1. Your second tap is Priority 2. Your third tap is Priority 3.</p>
+
+      <div class="count-badge" id="priorityCount">0 / 3 selected</div>
+
+      <div class="priority-list" id="priorityList"></div>
+
+      <button class="btn btn-text" onclick="resetPriorities()">Reset choices</button>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="priorityContinueBtn" disabled onclick="showPriorityFeedback()">Continue</button>
+      </div>
+
+      <div id="priorityFeedback" style="display:none;">
+        <div class="insight-card">
+          <h3>Your priority stack</h3>
+          <p id="priorityStackText" style="font-weight:700;"></p>
+          <p id="priorityDynamicInsight"></p>
+          <p>Digital speed helps, but speed alone is not enough. A first-time user also needs clarity, safety, and guidance.</p>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="goToScreen('q3')">Next</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 4: Hidden barrier challenge -->
+    <section class="screen" id="screen-q3">
+      <h2 class="screen-title">Question 3 — Hidden barrier insight</h2>
+
+      <p class="situation-box" id="q3Situation"></p>
+
+      <p class="instruction" id="q3Question"></p>
+
+      <div class="option-list" id="q3Options"></div>
+
+      <div id="q3Feedback" style="display:none;">
+        <div class="insight-card" id="q3FeedbackCard">
+          <span class="feedback-status" id="q3Status"></span>
+          <p id="q3Explanation"></p>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="goToScreen('q4')">Next</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 5: Advisory connection -->
+    <section class="screen" id="screen-q4">
+      <h2 class="screen-title">From barrier to advisory conversation</h2>
+
+      <p class="instruction" id="q4Question"></p>
+
+      <div class="option-list" id="q4Options"></div>
+
+      <div id="q4Feedback" style="display:none;">
+        <div class="insight-card" id="q4FeedbackCard">
+          <span class="feedback-status" id="q4Status"></span>
+          <p id="q4Explanation"></p>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="goToScreen('final')">See My CX Insight</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 6: Final insight -->
+    <section class="screen" id="screen-final">
+      <h1 class="title">Your Banking CX Pulse</h1>
+      <p class="body-text">Banking value is felt only when people can use it confidently.</p>
+
+      <div class="summary-block">
+        <p class="label">Your progress words</p>
+        <p class="value" id="finalWords"></p>
+      </div>
+
+      <div class="summary-block">
+        <p class="label">Your first-time user priorities</p>
+        <p class="value" id="finalPriorities"></p>
+      </div>
+
+      <div class="summary-block">
+        <p class="label">Your hidden barrier focus</p>
+        <p class="value">Confidence, clarity, and guidance</p>
+      </div>
+
+      <div class="insight-card" style="margin-top:6px;">
+        <h3>Key takeaways</h3>
+        <ol class="takeaway-list">
+          <li>Banking progress must feel useful to the customer.</li>
+          <li>Customers need trust, simplicity, and guidance.</li>
+          <li>A good advisory conversation builds confidence.</li>
+        </ol>
+      </div>
+
+      <div class="trainer-prompt">
+        <p class="label">Trainer chat prompt</p>
+        <p>What is one reason someone might avoid opening or using a bank account even if they need it?</p>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="restartActivity()">Restart Activity</button>
+        <button class="btn btn-secondary" onclick="restartActivity()">Back to Start</button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+/* =========================================================
+   EDITABLE CONTENT
+   Non-developers can safely edit the arrays below.
+   ========================================================= */
+
+// SCREEN 2 — Word cloud cards
+var wordCards = [
+  "Trust", "Access", "Digital", "Inclusion",
+  "Loans", "Savings", "Security", "Economy",
+  "SMEs", "Speed", "Confidence", "Human guidance",
+  "Clear fees", "Mobile app"
+];
+
+// Categories used only for the reflective summary (not a hard judgement)
+var customerViewWords = ["Trust", "Access", "Inclusion", "Security", "Confidence", "Human guidance", "Clear fees"];
+var bankViewWords = ["Digital", "Loans", "Savings", "Economy", "SMEs", "Speed", "Mobile app"];
+
+// SCREEN 3 — Priority ranking cards
+var priorityCards = [
+  "Trust", "Simplicity", "Human guidance",
+  "Digital speed", "Clear fees", "Safety"
+];
+
+// SCREENS 4 and 5 — Challenge questions
+var challengeQuestions = [
+  {
+    id: "q3",
+    situation: "\u201cI know I need a bank account, but I am not sure I will understand the fees and steps.\u201d",
+    question: "What is the strongest hidden barrier?",
+    options: [
+      { text: "The customer does not see any value in banking.", correct: false },
+      { text: "The customer lacks confidence and fears unclear costs or steps.", correct: true },
+      { text: "The customer only needs faster digital access.", correct: false }
+    ],
+    correctFeedback: "Good CX reading.",
+    incorrectFeedback: "Close, but not the strongest barrier.",
+    explanation: "The strongest barrier is confidence. The customer may need banking, but fear, unclear fees, or complex steps can stop them."
+  },
+  {
+    id: "q4",
+    situation: "",
+    question: "Which advisor response builds confidence best?",
+    options: [
+      { text: "\u201cI can explain all available products first.\u201d", correct: false },
+      { text: "\u201cLet's start with what worries you, then I will explain the steps and fees simply.\u201d", correct: true },
+      { text: "\u201cYou can read the requirements and come back when you are ready.\u201d", correct: false }
+    ],
+    correctFeedback: "Good CX move.",
+    incorrectFeedback: "Close, but not the strongest response.",
+    explanation: "A customer-centric advisor starts with the customer's worry, then gives simple explanation and guidance."
+  }
+];
+
+/* =========================================================
+   STATE
+   ========================================================= */
+
+var selectedWords = [];
+var selectedPriorities = [];
+var q3Answered = false;
+var q4Answered = false;
+var shuffledQ3 = [];
+var shuffledQ4 = [];
+
+var screenOrder = ["welcome", "q1", "q2", "q3", "q4", "final"];
+var progressMap = {
+  welcome: null,
+  q1: { step: 1, total: 4 },
+  q2: { step: 2, total: 4 },
+  q3: { step: 3, total: 4 },
+  q4: { step: 4, total: 4 },
+  final: "insight"
+};
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+function goToScreen(name){
+  var screens = document.querySelectorAll(".screen");
+  screens.forEach(function(s){ s.classList.remove("active"); });
+  document.getElementById("screen-" + name).classList.add("active");
+  updateProgress(name);
+  window.scrollTo({ top: 0, behavior: "auto" });
+
+  if(name === "q3" && !q3Answered){ renderChallenge(0); }
+  if(name === "q4" && !q4Answered){ renderChallenge(1); }
+}
+
+function updateProgress(name){
+  var info = progressMap[name];
+  var wrap = document.getElementById("progressWrap");
+  var label = document.getElementById("progressLabel");
+  var fill = document.getElementById("progressFill");
+
+  if(info === null){
+    wrap.style.display = "none";
+    return;
+  }
+
+  wrap.style.display = "block";
+
+  if(info === "insight"){
+    label.textContent = "Insight";
+    fill.style.width = "100%";
+    return;
+  }
+
+  label.textContent = "Step " + info.step + " of " + info.total;
+  fill.style.width = Math.round((info.step / info.total) * 100) + "%";
+}
+
+/* =========================================================
+   SCREEN 2 — Word cloud logic
+   ========================================================= */
+
+function renderWordGrid(){
+  var grid = document.getElementById("wordGrid");
+  grid.innerHTML = "";
+  wordCards.forEach(function(word){
+    var el = document.createElement("button");
+    el.type = "button";
+    el.className = "word-card";
+    el.textContent = word;
+    el.setAttribute("aria-pressed", "false");
+    el.onclick = function(){ toggleWord(word, el); };
+    grid.appendChild(el);
+  });
+}
+
+function toggleWord(word, el){
+  var idx = selectedWords.indexOf(word);
+  if(idx > -1){
+    selectedWords.splice(idx, 1);
+    el.classList.remove("selected");
+    el.setAttribute("aria-pressed", "false");
+  } else {
+    if(selectedWords.length >= 3){ return; }
+    selectedWords.push(word);
+    el.classList.add("selected");
+    el.setAttribute("aria-pressed", "true");
+  }
+  document.getElementById("wordCount").textContent = selectedWords.length + " / 3 selected";
+  document.getElementById("wordContinueBtn").disabled = selectedWords.length !== 3;
+}
+
+function showWordFeedback(){
+  var customerPicked = selectedWords.filter(function(w){ return customerViewWords.indexOf(w) > -1; });
+  var bankPicked = selectedWords.filter(function(w){ return bankViewWords.indexOf(w) > -1; });
+
+  document.getElementById("wordSelectedList").textContent = selectedWords.join(", ");
+  document.getElementById("wordCustomerView").innerHTML = customerPicked.length ? customerPicked.join(", ") : '<span class="hint-none">None selected</span>';
+  document.getElementById("wordBankView").innerHTML = bankPicked.length ? bankPicked.join(", ") : '<span class="hint-none">None selected</span>';
+
+  document.getElementById("wordFeedback").style.display = "block";
+  document.getElementById("wordContinueBtn").style.display = "none";
+}
+
+/* =========================================================
+   SCREEN 3 — Priority ranking logic
+   ========================================================= */
+
+function renderPriorityList(){
+  var list = document.getElementById("priorityList");
+  list.innerHTML = "";
+  priorityCards.forEach(function(item){
+    var el = document.createElement("button");
+    el.type = "button";
+    el.className = "priority-card";
+    el.setAttribute("aria-pressed", "false");
+
+    var label = document.createElement("span");
+    label.textContent = item;
+    el.appendChild(label);
+
+    var badge = document.createElement("span");
+    badge.className = "priority-badge";
+    badge.style.display = "none";
+    el.appendChild(badge);
+
+    el.onclick = function(){ togglePriority(item, el, badge); };
+    list.appendChild(el);
+  });
+}
+
+function togglePriority(item, el, badge){
+  var idx = selectedPriorities.indexOf(item);
+  if(idx > -1){ return; } // already selected priorities are locked in order
+  if(selectedPriorities.length >= 3){ return; }
+
+  selectedPriorities.push(item);
+  el.classList.add("selected");
+  el.setAttribute("aria-pressed", "true");
+  badge.style.display = "inline-block";
+  badge.textContent = "Priority " + selectedPriorities.length;
+
+  document.getElementById("priorityCount").textContent = selectedPriorities.length + " / 3 selected";
+  document.getElementById("priorityContinueBtn").disabled = selectedPriorities.length !== 3;
+}
+
+function resetPriorities(){
+  selectedPriorities = [];
+  document.getElementById("priorityCount").textContent = "0 / 3 selected";
+  document.getElementById("priorityContinueBtn").disabled = true;
+  renderPriorityList();
+}
+
+function showPriorityFeedback(){
+  var stackText = selectedPriorities.map(function(p, i){ return (i + 1) + ". " + p; }).join("  ·  ");
+  document.getElementById("priorityStackText").textContent = stackText;
+
+  var trustSelected = selectedPriorities.indexOf("Trust") > -1;
+  var dynamicText = trustSelected
+    ? "Good. Trust is often the first door to banking confidence."
+    : "Consider trust. Without trust, customers may avoid banking even if the service is fast.";
+  document.getElementById("priorityDynamicInsight").textContent = dynamicText;
+
+  document.getElementById("priorityFeedback").style.display = "block";
+  document.getElementById("priorityContinueBtn").style.display = "none";
+  document.querySelector('button[onclick="resetPriorities()"]').style.display = "none";
+}
+
+/* =========================================================
+   SCREENS 4 & 5 — Challenge question logic
+   ========================================================= */
+
+function shuffleArray(arr){
+  var copy = arr.slice();
+  for(var i = copy.length - 1; i > 0; i--){
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = copy[i];
+    copy[i] = copy[j];
+    copy[j] = tmp;
+  }
+  return copy;
+}
+
+function renderChallenge(index){
+  var data = challengeQuestions[index];
+  var prefix = data.id; // "q3" or "q4"
+
+  var shuffled = shuffleArray(data.options);
+  if(prefix === "q3"){ shuffledQ3 = shuffled; }
+  if(prefix === "q4"){ shuffledQ4 = shuffled; }
+
+  if(prefix === "q3"){
+    var situationEl = document.getElementById("q3Situation");
+    situationEl.style.display = data.situation ? "block" : "none";
+    situationEl.textContent = data.situation;
+    document.getElementById("q3Question").textContent = data.question;
+  } else {
+    document.getElementById("q4Question").textContent = data.question;
+  }
+
+  var container = document.getElementById(prefix + "Options");
+  container.innerHTML = "";
+
+  shuffled.forEach(function(opt){
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "option-card";
+    btn.textContent = opt.text;
+    btn.onclick = function(){ handleChallengeAnswer(prefix, opt, shuffled, index); };
+    container.appendChild(btn);
+  });
+
+  document.getElementById(prefix + "Feedback").style.display = "none";
+}
+
+function handleChallengeAnswer(prefix, chosenOpt, shuffled, index){
+  var data = challengeQuestions[index];
+  var container = document.getElementById(prefix + "Options");
+  var buttons = container.querySelectorAll(".option-card");
+
+  buttons.forEach(function(btn, i){
+    btn.disabled = true;
+    var optForBtn = shuffled[i];
+    if(optForBtn.correct === true){
+      btn.classList.add("correct");
+    } else if(optForBtn === chosenOpt){
+      btn.classList.add("incorrect");
+    }
+  });
+
+  var statusEl = document.getElementById(prefix + "Status");
+  var cardEl = document.getElementById(prefix + "FeedbackCard");
+  var explanationEl = document.getElementById(prefix + "Explanation");
+
+  if(chosenOpt.correct === true){
+    statusEl.textContent = data.correctFeedback;
+    statusEl.className = "feedback-status good";
+    cardEl.classList.remove("warning");
+  } else {
+    statusEl.textContent = data.incorrectFeedback;
+    statusEl.className = "feedback-status close";
+    cardEl.classList.add("warning");
+  }
+
+  explanationEl.textContent = data.explanation;
+  document.getElementById(prefix + "Feedback").style.display = "block";
+
+  if(prefix === "q3"){ q3Answered = true; }
+  if(prefix === "q4"){ q4Answered = true; }
+}
+
+/* =========================================================
+   FINAL SCREEN
+   ========================================================= */
+
+function populateFinalScreen(){
+  document.getElementById("finalWords").textContent = selectedWords.length ? selectedWords.join(", ") : "—";
+  var priorityText = selectedPriorities.map(function(p, i){ return (i + 1) + ". " + p; }).join("   ");
+  document.getElementById("finalPriorities").textContent = priorityText || "—";
+}
+
+/* Hook into goToScreen for the final screen population */
+var originalGoToScreen = goToScreen;
+goToScreen = function(name){
+  originalGoToScreen(name);
+  if(name === "final"){ populateFinalScreen(); }
+};
+
+/* =========================================================
+   RESTART
+   ========================================================= */
+
+function restartActivity(){
+  // Reset all activity state
+  selectedWords = [];
+  selectedPriorities = [];
+  q3Answered = false;
+  q4Answered = false;
+  shuffledQ3 = [];
+  shuffledQ4 = [];
+
+  // Reset Question 1 (word cloud)
+  document.getElementById("wordCount").textContent = "0 / 3 selected";
+  document.getElementById("wordContinueBtn").disabled = true;
+  document.getElementById("wordContinueBtn").style.display = "block";
+  document.getElementById("wordFeedback").style.display = "none";
+  renderWordGrid();
+
+  // Reset Question 2 (ranking)
+  document.getElementById("priorityCount").textContent = "0 / 3 selected";
+  document.getElementById("priorityContinueBtn").disabled = true;
+  document.getElementById("priorityContinueBtn").style.display = "block";
+  document.getElementById("priorityFeedback").style.display = "none";
+  document.querySelector('button[onclick="resetPriorities()"]').style.display = "inline-block";
+  renderPriorityList();
+
+  // Reset Question 3 (hidden barrier insight)
+  document.getElementById("q3Feedback").style.display = "none";
+  document.getElementById("q3Options").innerHTML = "";
+
+  // Reset Question 4 (advisory connection)
+  document.getElementById("q4Feedback").style.display = "none";
+  document.getElementById("q4Options").innerHTML = "";
+
+  // Return to the welcome screen with a clean state
+  goToScreen("welcome");
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+
+renderWordGrid();
+renderPriorityList();
+updateProgress("welcome");
+</script>
+
+</body>
+</html>
